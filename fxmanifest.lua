@@ -12,12 +12,16 @@ games {
   "rdr3"
 }
 
+shared_scripts {
+  '@es_extended/imports.lua',
+}
+
 ui_page 'web/build/index.html'
 
 client_script "client/**/*"
 server_script "server/**/*"
 
 files {
-	'web/build/index.html',
-	'web/build/**/*',
+  'web/build/index.html',
+  'web/build/**/*',
 }
