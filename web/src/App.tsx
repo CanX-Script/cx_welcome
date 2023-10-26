@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { debugData } from "./utils/debugData";
 import { fetchNui } from "./utils/fetchNui";
@@ -17,17 +17,40 @@ debugData([
 ]);
 
 const App: React.FC = () => {
-    const { visible } = useVisibility();
+    const { visible, setVisible } = useVisibility();
     const [page, setPage] = useState("init");
-    const handleGetReward = () => {
-        console.log("get reward");
-        setPage("got");
+    const [citizen, setCitizen] = useState(0);
+    const [giftState, setGiftState] = useState(
+        "Congrats! You Have Received a Welcome Gift."
+    );
+    const [creatorCode, setCreatorCode] = useState("");
+    useEffect(() => {
+        const getCitizenData = async () => {
+            const data = await fetchNui("getCitizenCount");
+            setCitizen(data);
+        };
+        getCitizenData();
+    }, []);
+    const handleGetReward = async () => {
+        const data = await fetchNui("gerReward");
+        if (data.state === "got") {
+            setPage("got");
+        } else if (data.state === "already") {
+            setGiftState("You've already received your gift!");
+            setPage("got");
+        }
     };
     const handleCreatorCode = () => {
         setPage("creator");
     };
-    const handleCreatorCodeCheck = () => {
-        setPage("init");
+    const handleCreatorCodeCheck = async () => {
+        const data = await fetchNui("gerRewardFromCode", { code: creatorCode });
+        if (data.state === "got") {
+            setPage("init");
+        } else if (data.state === "already") {
+            setPage("got");
+            setGiftState("You've already received your gift!");
+        }
     };
     window.addEventListener("keypress", (e) => {
         console.log(e);
@@ -68,7 +91,11 @@ const App: React.FC = () => {
                                     <FaUsers />
                                 </div>
                                 <h1 className="text-white text-[20px]">
-                                    OVER {1000} CITIZEN
+                                    OVER{" "}
+                                    {(
+                                        Math.floor(citizen / 100) * 100
+                                    ).toLocaleString()}{" "}
+                                    CITIZEN
                                 </h1>
                             </div>
                             <div className="flex flex-col h-[120px]">
@@ -94,7 +121,7 @@ const App: React.FC = () => {
                                 className="h-[200px] "
                             />
                             <h3 className="uppercase text-white font-akrobat text-[25px] ">
-                                Congrats! You Have Received a Welcome Gift.
+                                {giftState}
                             </h3>
                             <button
                                 onClick={() => {
@@ -116,6 +143,10 @@ const App: React.FC = () => {
                                 type="text"
                                 className="text-center bg-whitegradient text-white w-[300px] rounded-[23px] h-[50px] outline-none px-[10px] font-akrobat text-[20px]"
                                 placeholder="CREATOR CODE"
+                                value={creatorCode}
+                                onChange={(e) => {
+                                    setCreatorCode(e.target.value);
+                                }}
                             />
                             <button
                                 onClick={handleCreatorCodeCheck}

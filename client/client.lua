@@ -3,6 +3,21 @@ local function toggleNuiFrame(shouldShow)
   SendReactMessage('setVisible', shouldShow)
 end
 
+RegisterNUICallback("getCitizenCount", function(data, cb)
+  Wait(1000)
+  cb(35632)
+end)
+
+RegisterNUICallback("gerReward", function(data, cb)
+  -- got - already
+  cb({ state = "already" })
+end)
+RegisterNUICallback("gerRewardFromCode", function(data, cb)
+  -- got - already -- invalid
+  print("data")
+  cb({ state = "already" })
+end)
+
 RegisterCommand('show-nui', function()
   toggleNuiFrame(true)
   debugPrint('Show NUI frame')
