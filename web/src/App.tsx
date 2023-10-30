@@ -93,7 +93,7 @@ const App: React.FC = () => {
                                 <h1 className="text-white text-[20px]">
                                     OVER{" "}
                                     {(
-                                        Math.floor(citizen / 100) * 100
+                                        Math.floor(citizen)
                                     ).toLocaleString()}{" "}
                                     CITIZEN
                                 </h1>
