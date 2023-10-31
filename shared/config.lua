@@ -1,8 +1,8 @@
 Config = {}
 
-Config.Framework = 'ESX' -- ESX - QB 
+Config.Framework = 'ESX' -- ESX - QB
 
-Config.PedBuyIdCardModel = GetHashKey('a_m_y_business_03') 
+Config.PedBuyIdCardModel = GetHashKey('a_m_y_business_03')
 
 Config.PedLocation = { x = 215.69, y = -815.66, z = 29.66, h = 159.2 }
 
@@ -34,4 +34,16 @@ Config.DefaultReward = { -- Default reward
     Type = 'cash',
     Name = 'Cash',
     Amount = 50000,
+}
+
+Config.Locale = {
+    logo = "/web/build/img/ok-hand_1f44c.png",
+    svname = "GOOGLE",
+    welcome = "Welcome",
+    citizen = "CITIZENS",
+    over = "OVER",
+    claim_reward = "CLAIM REWARD",
+    creator_code = "CREATOR CODE",
+    go_back = "GO BACK",
+    check_code = "CHECK CODE",
 }

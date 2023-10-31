@@ -24,11 +24,38 @@ const App: React.FC = () => {
         "Congrats! You Have Received a Welcome Gift."
     );
     const [creatorCode, setCreatorCode] = useState("");
+    const handleCreatorCodeCheck = async () => {
+        const data = await fetchNui("gerRewardFromCode", { code: creatorCode });
+        if (data.state === "got") {
+            setPage("init");
+        } else if (data.state === "already") {
+            setPage("got");
+            setGiftState("You've already received your gift!");
+        }
+    };
+    const [locale, setLocale] = useState({
+        logo: "/web/build/img/logo.png",
+        svname: "CANX",
+        welcome: "Welcome",
+        citizen: "CITIZENS",
+        over: "OVER",
+        claim_reward: "CLAIM REWARD",
+        creator_code: "CREATOR CODE",
+        go_back: "GO BACK",
+        check_code: "CHECK CODE",
+    });
     useEffect(() => {
         const getCitizenData = async () => {
             const data = await fetchNui("getCitizenCount");
             setCitizen(data);
         };
+
+        const getLocaleData = async () => {
+            const data = await fetchNui("setLocale");
+
+            setLocale(data.Locale);
+        };
+        getLocaleData();
         getCitizenData();
     }, []);
     const handleGetReward = async () => {
@@ -43,18 +70,7 @@ const App: React.FC = () => {
     const handleCreatorCode = () => {
         setPage("creator");
     };
-    const handleCreatorCodeCheck = async () => {
-        const data = await fetchNui("gerRewardFromCode", { code: creatorCode });
-        if (data.state === "got") {
-            setPage("init");
-        } else if (data.state === "already") {
-            setPage("got");
-            setGiftState("You've already received your gift!");
-        }
-    };
-    window.addEventListener("keypress", (e) => {
-        console.log(e);
-    });
+
     return (
         <>
             {visible && (
@@ -74,28 +90,26 @@ const App: React.FC = () => {
                     {page === "init" && (
                         <div className=" flex flex-col items-center">
                             <img
-                                src="/web/build/img/logo.png"
-                                className="w-[200px] h-[110px] object-cover"
+                                src={locale.logo}
+                                className="w-[200px] h-[110px] object-contain"
                             />
                             <h1 className="relative text-white font-mortend text-[50px] text-center white-shadow">
-                                CANX{" "}
+                                {locale.svname}{" "}
                                 <span className="text-blue-600 text-[40px] blue-shadow absolute top-[-15px] right-[-20px] font-sans font-black  rotate-[30deg]">
                                     RP
                                 </span>
                             </h1>
                             <h3 className="uppercase text-blue-600 font-akrobat text-[25px] blue-shadow relative top-[-25px]">
-                                Welcome
+                                {locale.welcome}
                             </h3>
                             <div className="flex gap-[10px] font-akrobat items-center">
                                 <div className="h-[40px] w-[40px] bg-[#0581db77] border-blue-500 border text-white rounded-[5px] flex items-center justify-center text-[20px]">
                                     <FaUsers />
                                 </div>
                                 <h1 className="text-white text-[20px]">
-                                    OVER{" "}
-                                    {(
-                                        Math.floor(citizen)
-                                    ).toLocaleString()}{" "}
-                                    CITIZEN
+                                    {locale.over}{" "}
+                                    {Math.floor(citizen).toLocaleString()}{" "}
+                                    {locale.citizen}
                                 </h1>
                             </div>
                             <div className="flex flex-col h-[120px]">
@@ -103,13 +117,13 @@ const App: React.FC = () => {
                                     onClick={handleGetReward}
                                     className="text-[30px] font-akrobat text-white bg-bluegradient rounded-[23px] w-[300px] mt-[30px] h-[50px] transition-all duration-300 hover:scale-105"
                                 >
-                                    CLAIM REWARD
+                                    {locale.claim_reward}
                                 </button>
                                 <button
                                     onClick={handleCreatorCode}
                                     className="text-[25px] font-akrobat text-white rounded-[23px] w-[300px] mt-[10px] h-[50px] transition-all duration-300 hover:scale-105"
                                 >
-                                    CREATOR CODE
+                                    {locale.creator_code}
                                 </button>
                             </div>
                         </div>
@@ -129,7 +143,7 @@ const App: React.FC = () => {
                                 }}
                                 className="text-[30px] font-akrobat text-white bg-bluegradient rounded-[23px] w-[300px] mt-[10px] h-[50px] transition-all duration-300 hover:scale-105"
                             >
-                                GO BACK
+                                {locale.go_back}
                             </button>
                         </div>
                     )}
@@ -152,7 +166,7 @@ const App: React.FC = () => {
                                 onClick={handleCreatorCodeCheck}
                                 className="text-[30px] font-akrobat text-white bg-bluegradient rounded-[23px] w-[250px] mt-[10px] h-[50px] transition-all duration-300 hover:scale-105"
                             >
-                                CHECK CODE
+                                {locale.check_code}
                             </button>
                             <button
                                 onClick={() => {
@@ -160,7 +174,7 @@ const App: React.FC = () => {
                                 }}
                                 className="text-[25px] font-akrobat text-white rounded-[23px] w-[300px] mt-[10px] h-[50px] transition-all duration-300 hover:scale-105"
                             >
-                                GO BACK
+                                {locale.go_back}
                             </button>
                         </div>
                     )}
