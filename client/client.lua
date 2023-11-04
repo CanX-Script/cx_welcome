@@ -62,6 +62,7 @@ RegisterNUICallback("gerRewardFromCode", function(data, cb)
             TriggerServerEvent('CanX:ClaimReward', Code)
           else
             cb({ state = "invalid" })
+            ESX.ShowNotification('This creator code is not valid!')
           end
         end, Code)
       else
@@ -78,6 +79,7 @@ RegisterNUICallback("gerRewardFromCode", function(data, cb)
             TriggerServerEvent('CanX:ClaimReward', Code)
           else
             cb({ state = "invalid" })
+            QBCore.Functions.Notify('This creator code is not valid!', 'error')
           end
         end, Code)
       else
@@ -124,7 +126,7 @@ Citizen.CreateThread(function()
       Sleep = false
       if GetDistanceBetweenCoords(MyCoords, Config.PedLocation.x, Config.PedLocation.y, Config.PedLocation.z, true) < 2 then
         DrawText3Ds(Config.PedLocation.x, Config.PedLocation.y, Config.PedLocation.z + 2.1,
-        'Press E')
+        'Press ~g~E')
         if IsControlJustPressed(0, 38) then
           toggleNuiFrame(true)
         end
