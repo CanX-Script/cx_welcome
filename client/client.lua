@@ -3,7 +3,7 @@ QBCore = nil
 
 if Config.Framework == 'ESX' then
   ESX = exports["es_extended"]:getSharedObject()
-elseif Config.Framework == 'QB' then   
+elseif Config.Framework == 'QB' then
   QBCore = exports['qb-core']:GetCoreObject()
 end
 
@@ -19,7 +19,7 @@ RegisterNUICallback("getCitizenCount", function(data, cb)
       Wait(1000)
       cb(count)
     end)
-  elseif Config.Framework == 'QB' then    
+  elseif Config.Framework == 'QB' then
     QBCore.Functions.TriggerCallback("CanX:GetData", function(count)
       print(count)
       Wait(1000)
@@ -39,7 +39,7 @@ RegisterNUICallback("gerReward", function(data, cb)
         cb({ state = "already" })
       end
     end)
-  elseif Config.Framework == 'QB' then    
+  elseif Config.Framework == 'QB' then
     QBCore.Functions.TriggerCallback("CanX:GetClaimStatus", function(valid)
       if valid then
         cb({ state = "got" })
@@ -69,7 +69,7 @@ RegisterNUICallback("gerRewardFromCode", function(data, cb)
         cb({ state = "already" })
       end
     end)
-  elseif Config.Framework == 'QB' then    
+  elseif Config.Framework == 'QB' then
     local Code = data.code
     QBCore.Functions.TriggerCallback("CanX:GetClaimStatus", function(valid)
       if valid then
@@ -87,6 +87,10 @@ RegisterNUICallback("gerRewardFromCode", function(data, cb)
       end
     end)
   end
+end)
+
+RegisterNUICallback("setLocale", function(data, cb)
+  cb({ Locale = Config.Locale })
 end)
 
 RegisterNUICallback('hideFrame', function(_, cb)
@@ -113,7 +117,8 @@ Citizen.CreateThread(function()
   while not HasModelLoaded(Ped) do
     Wait(1)
   end
-  Ped = CreatePed(1, Ped, Config.PedLocation.x, Config.PedLocation.y, Config.PedLocation.z, Config.PedLocation.h, false, true)
+  Ped = CreatePed(1, Ped, Config.PedLocation.x, Config.PedLocation.y, Config.PedLocation.z, Config.PedLocation.h, false,
+    true)
   SetBlockingOfNonTemporaryEvents(Ped, true)
   SetPedCanPlayAmbientAnims(Ped, true)
   SetEntityInvincible(Ped, true)
@@ -137,17 +142,17 @@ Citizen.CreateThread(function()
 end)
 
 
-function DrawText3Ds(x,y,z,text)
-	local onScreen,_x,_y = World3dToScreen2d(x,y,z)
-	SetTextFont(4)
-	SetTextScale(0.35,0.35)
-	SetTextColour(255,255,255,250)
-	SetTextEntry("STRING")
-	SetTextCentre(1)
-	AddTextComponentString(text)
-	DrawText(_x,_y)
-	local factor = (string.len(text))/370
-	DrawRect(_x,_y+0.0125,0.01+factor,0.03,0,0,0,80)
+function DrawText3Ds(x, y, z, text)
+  local onScreen, _x, _y = World3dToScreen2d(x, y, z)
+  SetTextFont(4)
+  SetTextScale(0.35, 0.35)
+  SetTextColour(255, 255, 255, 250)
+  SetTextEntry("STRING")
+  SetTextCentre(1)
+  AddTextComponentString(text)
+  DrawText(_x, _y)
+  local factor = (string.len(text)) / 370
+  DrawRect(_x, _y + 0.0125, 0.01 + factor, 0.03, 0, 0, 0, 80)
 end
 
 RegisterNetEvent('CanX:ClaimVehicle', function(veh)
@@ -157,30 +162,30 @@ end)
 function AddCarForPlayer(veh)
   local PlayerCoords = GetEntityCoords(PlayerPedId())
   SpawnLocalVehicle(veh, vector3(PlayerCoords.x, PlayerCoords.y, PlayerCoords.z + 100), 50, function(vehicle)
-      local Vehicle_Prop 
-      if Config.Framework == 'ESX' then
-        Vehicle_Prop = ESX.Game.GetVehicleProperties(vehicle)
-      elseif Config.Framework == 'QB' then
-        Vehicle_Prop = QBCore.Functions.GetVehicleProperties(vehicle)
-      end
-      TriggerServerEvent('CanX:SetVehicleOwner', Vehicle_Prop, veh)
-      Citizen.Wait(2000)
-      DeleteEntity(vehicle)
+    local Vehicle_Prop
+    if Config.Framework == 'ESX' then
+      Vehicle_Prop = ESX.Game.GetVehicleProperties(vehicle)
+    elseif Config.Framework == 'QB' then
+      Vehicle_Prop = QBCore.Functions.GetVehicleProperties(vehicle)
+    end
+    TriggerServerEvent('CanX:SetVehicleOwner', Vehicle_Prop, veh)
+    Citizen.Wait(2000)
+    DeleteEntity(vehicle)
   end)
 end
 
 function SpawnLocalVehicle(modelName, coords, heading, cb)
   local model = (type(modelName) == 'number' and modelName or GetHashKey(modelName))
   Citizen.CreateThread(function()
-      Citizen.Wait(100)
-      RequestModel(model)
-      while not HasModelLoaded(model) do
-          Citizen.Wait(1000)
-      end
-      local vehicle = CreateVehicle(model, coords.x, coords.y, coords.z + 100, heading, false, false)
-      FreezeEntityPosition(vehicle, true)
-      if cb ~= nil then
-          cb(vehicle)
-      end
+    Citizen.Wait(100)
+    RequestModel(model)
+    while not HasModelLoaded(model) do
+      Citizen.Wait(1000)
+    end
+    local vehicle = CreateVehicle(model, coords.x, coords.y, coords.z + 100, heading, false, false)
+    FreezeEntityPosition(vehicle, true)
+    if cb ~= nil then
+      cb(vehicle)
+    end
   end)
 end
