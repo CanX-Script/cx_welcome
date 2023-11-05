@@ -1,3 +1,8 @@
+-- <<<     CanX WELCOME     >>> --|
+--    Discord : discord.gg/MGEVjBbKHw  --|                      
+--        Tebex : canx.tebex.io        --|        
+-- <<<     CanX WELCOME     >>> --|
+
 if Config.Framework == 'ESX' then
     ESX = nil
 
